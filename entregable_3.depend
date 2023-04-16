@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1584205420 source:c:\users\jorge\documents\programascode\entregable_3\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1681675840 source:c:\users\jorge\documents\programascode\entregable_3\matrix.c
+	<stdio.h>
+	<stdlib.h>
+	"matrix.h"
+
+1681675847 c:\users\jorge\documents\programascode\entregable_3\matrix.h
+

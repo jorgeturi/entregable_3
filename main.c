@@ -79,13 +79,21 @@ int main()
     vector* contador_negativos = NULL;
     matrix* matriz = NULL;
 
-    contador_ceros = vector_new(cantidad_columnas); /// por cada columna quiero saber cuantos "0"s hay
-    contador_negativos = vector_new (cantidad_filas); /// idem filas
+    inicializar_vectores(&contador_ceros, &contador_negativos, cantidad_filas, cantidad_columnas);
+
 
     matriz = matrix_new(cantidad_filas,cantidad_columnas);
 
-
+    printf("%d", contador_ceros->a[0]);
 
 
     return 0;
+}
+
+void inicializar_vectores(vector** vector_ver_columa, vector** vector_ver_fila, int filas, int columnas){
+    *vector_ver_columa = vector_new(columnas); /// por cada columna quiero saber cuantos "0"s hay
+    *vector_ver_fila = vector_new (filas); /// idem filas
+    (*vector_ver_columa)->a = malloc(columnas*sizeof(int*));
+    int* a = 25;
+    (*vector_ver_columa)->a[0] = &a;
 }

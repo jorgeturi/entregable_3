@@ -10,3 +10,23 @@
 
 1681675847 c:\users\jorge\documents\programascode\entregable_3\matrix.h
 
+1681827965 source:c:\users\turina\documents\github\entregable_3\matrix.c
+	<stdio.h>
+	<stdlib.h>
+	"matrix.h"
+
+1681825675 c:\users\turina\documents\github\entregable_3\matrix.h
+
+1681827923 source:c:\users\turina\documents\github\entregable_3\main.c
+	<stdio.h>
+	<stdlib.h>
+	"matrix.h"
+	"vector.h"
+
+1681825888 source:c:\users\turina\documents\github\entregable_3\vector.c
+	<stdio.h>
+	<stdlib.h>
+	"vector.h"
+
+1681825888 c:\users\turina\documents\github\entregable_3\vector.h
+

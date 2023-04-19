@@ -9,66 +9,11 @@ La cantidad de ceros que hay en cada columna de la matriz
 
 
 
-void test_matrix_int() {
-    int* aux;
-    matrix* m = matrix_new(10, 10);
-
-    printf("\n\nInicio pruebas de matriz de enteros\n");
-
-    srand(time(NULL));
-    for (int i = 0; i < matrix_rows(m); i++) {
-        for (int j = 0; j < matrix_columns(m); j++) {
-            aux = malloc(sizeof(int));
-            *aux = rand() % 1000;
-            matrix_set(m, i, j, aux);
-        }
-    }
-
-    printf("\nMatriz original\n");
 
 
-    vector* v = vector_new(10);
-    while(!vector_isfull(v)){
-        aux = malloc(sizeof(int));
-        *aux = rand() % 3 +1;
-        vector_add(v, aux);
-    }
-
-    printf("\nVector original\n");
-
-
-    printf("\nReemplazo de fila\n");
-
-
-
-    printf("\nReemplazo de columna\n");
-
-
-
-}
-
-
-
-void test_matrix_float() {
-
-   matrix* a = matrix_new(3, 2);
-    matrix* b = matrix_new(2, 4);
-    matrix* c = matrix_new(3, 4);
-
-    printf("\n\nInicio pruebas de matriz de flotantes\n");
-
-
-    printf("\nMatriz A\n");
-
-    printf("\nMatriz B\n");
-
-
-    printf("\nMatriz C\n");
-
-
-}
-
-
+void inicializar_vectores(vector** vector_ver_columna, vector** vector_ver_fila, int filas, int columnas);
+matrix* inicializar_matriz(int filas, int columnas);
+void recorrer_y_contar(matrix* m, int fila, int columna, vector* contadores);
 
 int main()
 {
@@ -80,20 +25,118 @@ int main()
     matrix* matriz = NULL;
 
     inicializar_vectores(&contador_ceros, &contador_negativos, cantidad_filas, cantidad_columnas);
+    vector* contadores = NULL;
+    contadores = vector_new(2);
+    contadores->a = malloc(sizeof(void*)*2);
+    contadores->a[0] = contador_ceros;
+    contadores->a[1] = contador_negativos;
+    matriz = inicializar_matriz (cantidad_filas, cantidad_columnas);
+
+    float* aux ;
+    for (int i=0; i<cantidad_filas; i++)
+    {
+        for(int j=0; j<cantidad_columnas ; j++)
+        {
+            aux =matrix_get(matriz,i,j);
+            printf("%f ",*aux);
+
+        }
+        printf("\n ");
+    }
+
+    recorrer_y_contar(matriz,0,0,contadores);
 
 
-    matriz = matrix_new(cantidad_filas,cantidad_columnas);
+    for (int i=0 ; i<cantidad_columnas; i++)
+    {
+        printf("%d ceros en la col %d \n", contador_ceros->a[i], i);
+        printf("%d negativos en la fila %d \n", contador_negativos->a[i], i);
 
-    printf("%d", contador_ceros->a[0]);
+    }
 
 
     return 0;
 }
 
-void inicializar_vectores(vector** vector_ver_columa, vector** vector_ver_fila, int filas, int columnas){
-    *vector_ver_columa = vector_new(columnas); /// por cada columna quiero saber cuantos "0"s hay
-    *vector_ver_fila = vector_new (filas); /// idem filas
-    (*vector_ver_columa)->a = malloc(columnas*sizeof(int*));
-    int* a = 25;
-    (*vector_ver_columa)->a[0] = &a;
+/**
+*   Recibe un puntero a una matriz, posiciones fila y columna y un puntero a un vector que contiene direcciones de memoria
+*  a los vectores que cuentan
+*
+*   En el vector contadores posicion 0 se debe apuntar al vector que cuenta 0s por columna
+*                                    1 se debe apuntar al vector que cuenta negativos por fila
+*/
+void recorrer_y_contar(matrix* m, int fila, int columna, vector* contadores)
+{
+    float* aux;
+    vector* vector_aux;
+    if (fila == m->rows && columna == m->columns)       ///parada, al llegar a revisar todo
+    {
+        return;
+    }
+    if(fila < m->rows)
+    {
+        if(columna < m->columns)
+        {
+
+            aux =  matrix_get(m,fila,columna);
+            if(*aux  > -0.5 && *aux <0.5)
+            {
+                vector_aux = contadores->a[0];  ///el contadores de 0 contiene la dir del vector que almacena 0s
+                vector_aux->a[columna] = vector_aux->a[columna] + 1;
+            }
+            if(*aux  < 0)
+            {
+                vector_aux = contadores->a[1];  ///el contadores de 0 contiene la dir del vector que almacena 0s
+                vector_aux->a[fila] = vector_aux->a[fila] + 1;
+            }
+
+            return recorrer_y_contar(m,fila,columna+1,contadores);
+
+        }
+
+        columna = 0;
+        return recorrer_y_contar(m,fila+1,columna,contadores);
+
+    }
+
+}
+
+void inicializar_vectores(vector** vector_ver_columna, vector** vector_ver_fila, int filas, int columnas)
+{
+    (*vector_ver_columna) = vector_new(columnas); /// por cada columna quiero saber cuantos "0"s hay
+    (*vector_ver_fila) = vector_new (filas); /// idem filas
+    (*vector_ver_columna)->a = malloc(columnas*sizeof(int*));
+    (*vector_ver_fila)->a = malloc(filas*sizeof(int*));
+
+    int* aux = 0;                       ///los vectores apuntan a direcciones que apuntan al valor
+    for (int i=0 ; i<filas; i++)        ///inicializo los vectores con direcciones que apuntan a 0
+    {
+        (*vector_ver_fila)->a[i] = aux;
+    }
+    for (int i=0 ; i<columnas; i++)
+    {
+        (*vector_ver_columna)->a[i] = aux;
+    }
+
+}
+
+matrix* inicializar_matriz(int filas, int columnas)
+{
+
+    float* aux;
+    matrix* m = NULL;
+    m = matrix_new(filas,columnas);
+
+    srand(time(NULL));
+    for (int i = 0; i < matrix_rows(m); i++)
+    {
+        for (int j = 0; j < matrix_columns(m); j++)
+        {
+            aux = malloc(sizeof(float));
+            *aux = (float) (-rand() + rand())/(rand()) ;
+            matrix_set(m, i, j, aux);
+        }
+    }
+
+    return m;
 }
